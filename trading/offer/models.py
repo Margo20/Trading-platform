@@ -2,26 +2,6 @@ from django.db import models
 from authentication.models import User
 
 
-class StockBase(models.Model):
-    """Base"""
-    name = models.CharField("Name", max_length=128, unique=True)
-    code = models.CharField("Code", max_length=8, unique=True)
-
-
-class Money(models.Model):
-    """users money"""
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
-    sum = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
-    # currency = models.ForeignKey("Currency", max_length=15, on_delete=models.SET_NULL)
-
-    class Meta:
-        verbose_name = "Сумма на счету"
-        verbose_name_plural = "Средства на счетах"
-
-    def __str__(self):
-        return f"{self.user}"
-
-
 class Currency(models.Model):
     name = models.CharField(max_length=25)
 
@@ -31,7 +11,6 @@ class Currency(models.Model):
 
     def __str__(self):
         return f"{self.name}"
-
 
 class Item(models.Model):
     """Particular stock"""
@@ -45,13 +24,36 @@ class Item(models.Model):
         verbose_name_plural = "Акции"
 
     def __str__(self):
-        return f"{self.name}"
+        return f"{self.name}-{self.price}"
 
 
-class WatchList(models.Model):
-    """Current user, favorite list of stocks"""
+class Price(models.Model):
+    """Item prices"""
+    currenc = models.ForeignKey(Currency, blank=True, null=True, on_delete=models.SET_NULL)
+    item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.CASCADE, related_name='prices')
+    price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
+    date = models.DateTimeField(unique=True, blank=True, null=True)
+
+    class Meta:
+        verbose_name = "Стоимость акции"
+        verbose_name_plural = "Стоимость акций"
+
+    def __str__(self):
+        return f"{self.item}-{self.price}"
+
+
+class Money(models.Model):
+    """users money"""
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
-    item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL)
+    sum = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
+    # currenc = models.ForeignKey("Currency", max_length=15, on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name = "Сумма на счету"
+        verbose_name_plural = "Средства на счетах"
+
+    def __str__(self):
+        return f"{self.user}-{self.sum}"
 
 
 class Offer(models.Model):
@@ -70,21 +72,6 @@ class Offer(models.Model):
 
     def __str__(self):
         return f"{self.item}-{self.order_type}-{self.price}-{self.user}-{self.quantity}"
-
-
-class Price(models.Model):
-    """Item prices"""
-    currenc = models.ForeignKey(Currency, blank=True, null=True, on_delete=models.SET_NULL)
-    item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.CASCADE, related_name='prices')
-    price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
-    date = models.DateTimeField(unique=True, blank=True, null=True)
-
-    class Meta:
-        verbose_name = "Цена акции"
-        verbose_name_plural = "Цены акций"
-
-    def __str__(self):
-        return f"{self.item}"
 
 
 class Trade(models.Model):
@@ -122,11 +109,33 @@ class Inventory(models.Model):
 
     class Meta:
         verbose_name = "Акция пользователя"
-        verbose_name_plural = "Акции пользователя"
+        verbose_name_plural = "Акции пользователей"
 
     def __str__(self):
-        return f"{self.item}-{self.user}-{self.quantity}"
+        return f"{self.user}-{self.item}-{self.quantity}"
 
 
+class StockBase(models.Model):
+    """Base"""
+    name = models.CharField("Name", max_length=128, unique=True)
+    code = models.CharField("Code", max_length=8, unique=True)
+
+    class Meta:
+        verbose_name = "Имя и код акции"
+        verbose_name_plural = "Имена и коды акций"
+
+    def __str__(self):
+        return f"{self.name}:{self.code}"
 
 
+class WatchList(models.Model):
+    """Current user, favorite list of stocks"""
+    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL)
+
+    class Meta:
+        verbose_name = "Список предподчтений"
+        verbose_name_plural = "Списки предподчтений"
+
+    def __str__(self):
+        return f"{self.user}:{self.item}"
