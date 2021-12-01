@@ -21,18 +21,18 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = 'django-insecure-&+a%^+g@@!!f-4$zx(%!a-dw62gk(t5%9^s9u=jl%pl4+&dn_t'
+SECRET_KEY = 'django-insecure-&+a%^+g@@!!f-4$zx(%!a-dw62gk(t5%9^s9u=jl%pl4+&dn_t'
+
+# SECURITY WARNING: don't run with debug turned on in production!
+DEBUG = True
+
+ALLOWED_HOSTS = []
+
+# SECRET_KEY = os.environ.get("SECRET_KEY")
 #
-# # SECURITY WARNING: don't run with debug turned on in production!
-# DEBUG = True
+# DEBUG = int(os.environ.get("DEBUG", default=0))
 #
-# ALLOWED_HOSTS = []
-
-SECRET_KEY = os.environ.get("SECRET_KEY")
-
-DEBUG = int(os.environ.get("DEBUG", default=0))
-
-ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
+# ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 
 # Application definition
@@ -54,6 +54,9 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
+    'django.middleware.http.ConditionalGetMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -205,3 +208,20 @@ CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://localhost:6379/
 CELERY_ACCEPT_CONTENT = {'application/json'}
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
+
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://localhost:6379/0',
+        'OPTIONS':{
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'PASSWORD': 'mysecret',
+        }
+    }
+}
+
+SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
+SESSION_CACHE_ALIAS = "default"
+
+

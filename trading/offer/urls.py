@@ -2,7 +2,7 @@ from os.path import basename
 
 from rest_framework.routers import DefaultRouter
 
-from .views import OfferViewSet, TradeViewSet, TestCelery, MoneyViewSet, WatchListViewSet, InventoryViewSet
+from .views import OfferViewSet, TradeViewSet, MoneyViewSet, WatchListViewSet, InventoryViewSet
 
 app_name = "offer"
 

@@ -14,8 +14,8 @@ class Currency(models.Model):
 
 class Item(models.Model):
     """Particular stock"""
-    name = models.CharField(max_length=30)
-    kod = models.CharField(max_length=25)
+    name = models.OneToOneField('StockBase', related_name = 'item_name', max_length=30, blank=True, null=True, on_delete=models.SET_NULL)
+    code = models.CharField( max_length=25, blank=True, null=True)
     price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
     currenc = models.ForeignKey(Currency, null=True, blank=True, on_delete=models.SET_NULL)
 
@@ -79,7 +79,8 @@ class Trade(models.Model):
     item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL)
     quantity = models.IntegerField()
     unit_price = models.DecimalField(max_digits=7, decimal_places=2)
-    description = models.TextField(blank=True, null=True)
+    currenc = models.CharField(max_length=20, blank=True, null=True)
+    # currenc = models.ForeignKey(Currency, blank=True, null=True, on_delete=models.SET_NULL)
     buyer_offer = models.ForeignKey(Offer, blank=True, null=True, on_delete=models.SET_NULL, related_name='buyer_trade',
                                     related_query_name='buyer_trade')
     seller_offer = models.ForeignKey(Offer, blank=True, null=True, on_delete=models.SET_NULL, related_name='seller_trade',
@@ -125,7 +126,7 @@ class StockBase(models.Model):
         verbose_name_plural = "Имена и коды акций"
 
     def __str__(self):
-        return f"{self.name}:{self.code}"
+        return f"{self.name}"
 
 
 class WatchList(models.Model):
@@ -134,8 +135,8 @@ class WatchList(models.Model):
     item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
-        verbose_name = "Список предподчтений"
-        verbose_name_plural = "Списки предподчтений"
+        verbose_name = "Список предпочтений"
+        verbose_name_plural = "Списки предпочтений"
 
     def __str__(self):
         return f"{self.user}:{self.item}"
