@@ -1,0 +1,53 @@
+[2021-12-01 10:52:44,854: INFO/MainProcess] Connected to redis://redis:6379/0
+[2021-12-01 10:52:44,865: INFO/MainProcess] mingle: searching for neighbors
+[2021-12-01 10:52:45,895: INFO/MainProcess] mingle: all alone
+[2021-12-01 10:52:45,916: WARNING/MainProcess] /usr/local/lib/python3.8/site-packages/celery/fixups/django.py:205: UserWarning: Using settings.DEBUG leads to a memory
+            leak, never use this setting in production environments!
+  warnings.warn('''Using settings.DEBUG leads to a memory
+[2021-12-01 10:52:45,916: INFO/MainProcess] celery@f7baf76a3cf0 ready.
+[2021-12-01 10:52:45,987: INFO/Beat] beat: Starting...
+[2021-12-01 10:52:46,021: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 10:52:46,030: INFO/MainProcess] Received task: offer.tasks.req[f924af41-4f22-4d0c-81a3-ba7b2e2f5a60]  
+[2021-12-01 10:52:46,039: INFO/ForkPoolWorker-8] Task offer.tasks.req[f924af41-4f22-4d0c-81a3-ba7b2e2f5a60] succeeded in 0.008602745998359751s: None
+[2021-12-01 10:52:49,967: INFO/MainProcess] Events of group {task} enabled by remote.
+[2021-12-01 10:53:00,002: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 10:53:00,009: INFO/MainProcess] Received task: offer.tasks.req[1476c122-75d7-47d6-adba-71137f5e02b6]  
+[2021-12-01 10:53:00,026: INFO/ForkPoolWorker-8] Task offer.tasks.req[1476c122-75d7-47d6-adba-71137f5e02b6] succeeded in 0.013760969999566441s: None
+[2021-12-01 10:54:00,051: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 10:54:00,056: INFO/MainProcess] Received task: offer.tasks.req[7491a401-e3da-4844-ad7b-54b5179a181c]  
+[2021-12-01 10:54:00,070: INFO/ForkPoolWorker-8] Task offer.tasks.req[7491a401-e3da-4844-ad7b-54b5179a181c] succeeded in 0.01089331600087462s: None
+[2021-12-01 10:55:00,050: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 10:55:00,056: INFO/MainProcess] Received task: offer.tasks.req[3be8936e-b88b-4dad-931a-d13866c27f56]  
+[2021-12-01 10:55:00,081: INFO/ForkPoolWorker-8] Task offer.tasks.req[3be8936e-b88b-4dad-931a-d13866c27f56] succeeded in 0.02052822599944193s: None
+[2021-12-01 10:56:00,051: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 10:56:00,055: INFO/MainProcess] Received task: offer.tasks.req[1e7771ed-bb25-4e7b-8839-c666ac9bf64e]  
+[2021-12-01 10:56:00,107: INFO/ForkPoolWorker-8] Task offer.tasks.req[1e7771ed-bb25-4e7b-8839-c666ac9bf64e] succeeded in 0.049561350999283604s: None
+[2021-12-01 10:57:00,050: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 10:57:00,054: INFO/MainProcess] Received task: offer.tasks.req[b7271434-209f-46d0-82ee-b1407286ef61]  
+[2021-12-01 10:57:00,061: INFO/ForkPoolWorker-8] Task offer.tasks.req[b7271434-209f-46d0-82ee-b1407286ef61] succeeded in 0.005657986999722198s: None
+[2021-12-01 10:58:00,050: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 10:58:00,055: INFO/MainProcess] Received task: offer.tasks.req[063fa2cd-1ae9-4004-8a76-e61fa6465d6c]  
+[2021-12-01 10:58:00,070: INFO/ForkPoolWorker-8] Task offer.tasks.req[063fa2cd-1ae9-4004-8a76-e61fa6465d6c] succeeded in 0.011679604001983535s: None
+[2021-12-01 10:59:00,050: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 10:59:00,055: INFO/MainProcess] Received task: offer.tasks.req[fda6cd5b-e60c-4adc-aff4-b831a3d2c16d]  
+[2021-12-01 10:59:00,067: INFO/ForkPoolWorker-8] Task offer.tasks.req[fda6cd5b-e60c-4adc-aff4-b831a3d2c16d] succeeded in 0.008962741001596441s: None
+[2021-12-01 10:59:55,989: INFO/MainProcess] beat: Shutting down...
+[2021-12-01 11:00:17,338: INFO/MainProcess] Connected to redis://redis:6379/0
+[2021-12-01 11:00:17,349: INFO/MainProcess] mingle: searching for neighbors
+[2021-12-01 11:00:18,374: INFO/MainProcess] mingle: all alone
+[2021-12-01 11:00:18,383: WARNING/MainProcess] /usr/local/lib/python3.8/site-packages/celery/fixups/django.py:205: UserWarning: Using settings.DEBUG leads to a memory
+            leak, never use this setting in production environments!
+  warnings.warn('''Using settings.DEBUG leads to a memory
+[2021-12-01 11:00:18,383: INFO/MainProcess] celery@115e5a7970d9 ready.
+[2021-12-01 11:00:18,722: INFO/Beat] beat: Starting...
+[2021-12-01 11:00:18,737: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 11:00:18,747: INFO/MainProcess] Received task: offer.tasks.req[dc02a780-e3cf-4c0f-b589-25968009a3ff]  
+[2021-12-01 11:00:18,757: INFO/ForkPoolWorker-8] Task offer.tasks.req[dc02a780-e3cf-4c0f-b589-25968009a3ff] succeeded in 0.008857762997649843s: None
+[2021-12-01 11:00:22,624: INFO/MainProcess] Events of group {task} enabled by remote.
+[2021-12-01 11:01:00,032: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 11:01:00,038: INFO/MainProcess] Received task: offer.tasks.req[778ceb6e-07da-4b17-9054-591df8c8058e]  
+[2021-12-01 11:01:00,057: INFO/ForkPoolWorker-8] Task offer.tasks.req[778ceb6e-07da-4b17-9054-591df8c8058e] succeeded in 0.01549122700089356s: None
+[2021-12-01 11:02:00,050: INFO/Beat] Scheduler: Sending due task pick-up-new-offer-every-60-seconds (offer.tasks.req)
+[2021-12-01 11:02:00,058: INFO/MainProcess] Received task: offer.tasks.req[b1d6fc15-2874-4f55-b729-11c19fb5edd2]  
+[2021-12-01 11:02:00,086: INFO/ForkPoolWorker-8] Task offer.tasks.req[b1d6fc15-2874-4f55-b729-11c19fb5edd2] succeeded in 0.023631323001609417s: None
+[2021-12-01 11:02:57,089: INFO/MainProcess] beat: Shutting down...
