@@ -1,8 +1,8 @@
 from rest_framework import serializers
 from django.contrib.auth import authenticate
 
-from .models import User
-"""структура данных в теле POST запроса:"""
+from authentication.models import User
+"""data structure in the body of the POST request :"""
 # {
 #     "user": {
 #         "username": "user1",
@@ -11,10 +11,8 @@ from .models import User
 #     }
 # }
 
-
 class RegistrationSerializer(serializers.ModelSerializer):
-    """Сериализация регистрации пользователя и создания нового."""
-
+    """Serializing user registration and creating a new one."""
     password = serializers.CharField(max_length=128, min_length=8, write_only=True)
 
     token = serializers.CharField(max_length=255, read_only=True)
@@ -57,33 +55,21 @@ class LoginSerializer(serializers.Serializer):
 
 
 class UserSerializer(serializers.ModelSerializer):
-    """Ощуществляет сериализацию и десериализацию объектов User."""
+    """Serializes and deserializes objects User."""
 
     password = serializers.CharField(max_length=128, min_length=8, write_only=True)
 
     class Meta:
         model = User
-        fields = (
-            "email",
-            "username",
-            "password",
-            "token",
-        )
+        fields = ("email", "username", "password", "token")
 
         read_only_fields = ("token",)
 
     def update(self, instance, validated_data):
-        """Выполняет обновление User."""
-
-        # В отличие от других полей, пароли не следует обрабатывать с помощью
-        # setattr. Django предоставляет функцию, которая обрабатывает пароли
-        # хешированием и 'солением'. Это означает, что нам нужно удалить поле
-        # пароля из словаря 'validated_data' перед его использованием далее.
+        """Performs user update"""
         password = validated_data.pop("password", None)
 
         for key, value in validated_data.items():
-            # Для ключей, оставшихся в validated_data мы устанавливаем значения
-            # в текущий экземпляр User по одному.
             setattr(instance, key, value)
 
         if password is not None:

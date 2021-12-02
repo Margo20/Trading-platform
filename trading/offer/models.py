@@ -44,9 +44,9 @@ class Price(models.Model):
 
 class Money(models.Model):
     """users money"""
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, related_name= 'wallets',on_delete=models.CASCADE)
     sum = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
-    # currenc = models.ForeignKey("Currency", max_length=15, on_delete=models.SET_NULL)
+    currenc = models.ForeignKey("Currency", max_length=15, blank=True, null=True, on_delete=models.SET_NULL)
 
     class Meta:
         verbose_name = "Сумма на счету"
@@ -104,7 +104,7 @@ class Trade(models.Model):
 
 class Inventory(models.Model):
     """The number of stocks a particular user has"""
-    user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
+    user = models.ForeignKey(User, related_name='stocks', on_delete=models.CASCADE)
     item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL)
     quantity = models.IntegerField("Stocks quantity", default=0)
 

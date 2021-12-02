@@ -1,10 +1,7 @@
 import jwt
-
 from django.conf import settings
-
 from rest_framework import authentication, exceptions
-
-from .models import User
+from authentication.models import User
 
 
 class JWTAuthentication(authentication.BaseAuthentication):
@@ -12,10 +9,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def authenticate(self, request):
         request.user = None
-
-        # 'auth_header' должен быть массивом с двумя элементами:
-        # 1) именем заголовка аутентификации (Token в нашем случае)
-        # 2) сам JWT, по которому мы должны пройти аутентифкацию
+#'auth_header' must be an array with two elements:
+# 1)the name of the authentication header (Token) 2) JWT
         auth_header = authentication.get_authorization_header(request).split()
         auth_header_prefix = self.authentication_header_prefix.lower()
 
@@ -23,48 +18,36 @@ class JWTAuthentication(authentication.BaseAuthentication):
             return None
 
         if len(auth_header) == 1:
-            # Некорректный заголовок токена, в заголовке передан один элемент
             return None
 
         elif len(auth_header) > 2:
-            # Некорректный заголовок токена, какие-то лишние пробельные символы
             return None
 
-        # JWT библиотека которую мы используем, обычно некорректно обрабатывает
-        # тип bytes, который обычно используется стандартными библиотеками
-        # Python3 (HINT: использовать PyJWT). Чтобы точно решить это, нам нужно
-        # декодировать prefix и token. Это не самый чистый код, но это хорошее
-        # решение, потому что возможна ошибка, не сделай мы этого.
         prefix = auth_header[0].decode('utf-8')
         token = auth_header[1].decode('utf-8')
 
         if prefix.lower() != auth_header_prefix:
-            # Префикс заголовка не тот, который мы ожидали - отказ.
             return None
 
-        # К настоящему моменту есть "шанс", что аутентификация пройдет успешно.
-        # Мы делегируем фактическую аутентификацию учетных данных методу ниже.
         return self._authenticate_credentials(request, token)
 
     def _authenticate_credentials(self, request, token):
-        """
-        Попытка аутентификации с предоставленными данными. Если успешно -
-        вернуть пользователя и токен, иначе - сгенерировать исключение.
-        """
+        '''An attempt to authenticate with the provided data. If successful,
+        return the user and token, otherwise, throw an exception.'''
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
         except Exception:
-            msg = 'Ошибка аутентификации. Невозможно декодировать токеню'
+            msg = 'Authentication error. Unable to decode token'
             raise exceptions.AuthenticationFailed(msg)
 
         try:
             user = User.objects.get(pk=payload['id'])
         except User.DoesNotExist:
-            msg = 'Пользователь соответствующий данному токену не найден.'
+            msg = 'User matching this token was not found.'
             raise exceptions.AuthenticationFailed(msg)
 
         if not user.is_active:
-            msg = 'Данный пользователь деактивирован.'
+            msg = 'This user is deactivated.'
             raise exceptions.AuthenticationFailed(msg)
 
         return (user, token)

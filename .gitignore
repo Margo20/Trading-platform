@@ -1,11 +1,8 @@
 /trading/db.sqlite3
 /venv
 /.idea
-/trading/authentication/migrations/*
-!/trading/authentication/migrations/__init__.py
-/trading/offer/migrations/*
-!/trading/offer/migrations/__init__.py
 /trading/celerybeat-schedule.db
 /trading/static/
 *.pyc
 *.pyo
+/trading/logs/

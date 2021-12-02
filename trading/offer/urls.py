@@ -1,13 +1,8 @@
-from os.path import basename
-
 from rest_framework.routers import DefaultRouter
 
-from .views import OfferViewSet, TradeViewSet, MoneyViewSet, WatchListViewSet, InventoryViewSet
+from offer.views import OfferViewSet, TradeViewSet, MoneyViewSet, WatchListViewSet, InventoryViewSet
 
 app_name = "offer"
-
-
-from django.urls import path
 
 
 router = DefaultRouter()

@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Item, Price, Currency, Offer, Trade, WatchList, Inventory, Money, StockBase
+from offer.models import Item, Price, Currency, Offer, Trade, WatchList, Inventory, Money, StockBase
 
 
 admin.site.register(Price)

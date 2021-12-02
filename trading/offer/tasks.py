@@ -1,6 +1,6 @@
 from trading.celery import app
 from django.db import transaction
-from .models import Offer, Trade, Money, Inventory, Item, Price
+from offer.models import Offer, Trade, Money, Inventory, Item, Price
 
 
 @app.task
@@ -17,6 +17,7 @@ def req():
                     trades.append(Trade(item=buyer.item, quantity=buyer.quantity, unit_price=seller.price, currenc=buyer.item.currenc, buyer_offer=buyer,
                                         seller_offer=seller, seller=seller.user, buyer=buyer.user))
                     seller.quantity = seller.quantity - buyer.quantity
+                    # seller.user.money_set.sum
                     buyer.quantity = 0
                     break
                 else:
