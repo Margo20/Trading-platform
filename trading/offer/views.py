@@ -5,13 +5,11 @@ from offer.filters import FilterByUser
 
 
 class OfferViewSet(ModelViewSet):
-    filter_backends = [FilterByUser]
     queryset = Offer.objects.all()
     serializer_class = OfferSerializer
 
 
 class TradeViewSet(ModelViewSet):
-    filter_backends = [FilterByUser]
     queryset = Trade.objects.all()
     serializer_class = TradeSerializer
 
