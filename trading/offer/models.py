@@ -4,6 +4,7 @@ from authentication.models import User
 
 class Currency(models.Model):
     name = models.CharField(max_length=25)
+    course= models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
 
     class Meta:
         verbose_name = "Валюта"
@@ -15,9 +16,9 @@ class Currency(models.Model):
 class Item(models.Model):
     """Particular stock"""
     name = models.OneToOneField('StockBase', related_name = 'item_name', max_length=30, blank=True, null=True, on_delete=models.SET_NULL)
-    code = models.CharField( max_length=25, blank=True, null=True)
     price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
     currenc = models.ForeignKey(Currency, null=True, blank=True, on_delete=models.SET_NULL)
+    code = models.CharField(max_length=25, blank=True, null=True)
 
     class Meta:
         verbose_name = "Акция"
@@ -53,7 +54,7 @@ class Money(models.Model):
         verbose_name_plural = "Средства на счетах"
 
     def __str__(self):
-        return f"{self.user}-{self.sum}"
+        return f"{self.user}-{self.sum}-{self.currenc}"
 
 
 class Offer(models.Model):
@@ -132,7 +133,7 @@ class StockBase(models.Model):
 class WatchList(models.Model):
     """Current user, favorite list of stocks"""
     user = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL)
-    item = models.ForeignKey(Item, blank=True, null=True, on_delete=models.SET_NULL)
+    item = models.ForeignKey('StockBase', related_name = 'watchlist', max_length=30, blank=True, null=True, on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Список предпочтений"

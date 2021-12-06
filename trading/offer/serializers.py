@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from offer.models import Offer, Trade, Inventory, Money, WatchList
+from offer.models import Offer, Trade, Inventory, Money, WatchList, Currency
 
 
 class OfferSerializer(serializers.ModelSerializer):
@@ -41,3 +41,8 @@ class WatchListSerializer(serializers.ModelSerializer):
     class Meta:
         model = WatchList
         fields = ['user', 'item']
+
+class CurrencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Currency
+        fields = ['name', 'course']

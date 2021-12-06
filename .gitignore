@@ -6,3 +6,4 @@
 *.pyc
 *.pyo
 /trading/logs/
+*.pytest_cach

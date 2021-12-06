@@ -1,6 +1,6 @@
 from rest_framework.viewsets import ModelViewSet
-from offer.models import Offer, Trade, Inventory, Money, WatchList
-from offer.serializers import OfferSerializer, TradeSerializer, InventorySerializer, WatchListSerializer, MoneySerializer
+from offer.models import Offer, Trade, Inventory, Money, WatchList, Currency
+from offer.serializers import OfferSerializer, TradeSerializer, InventorySerializer, WatchListSerializer, MoneySerializer, CurrencySerializer
 from offer.filters import FilterByUser
 
 
@@ -30,3 +30,7 @@ class MoneyViewSet(ModelViewSet):
     filter_backends = [FilterByUser]
     queryset = Money.objects.all()
     serializer_class = MoneySerializer
+
+class CurrencySerializer(ModelViewSet):
+    queryset = Currency.objects.all()
+    serializer_class = CurrencySerializer
