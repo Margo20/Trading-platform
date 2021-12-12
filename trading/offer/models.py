@@ -5,7 +5,6 @@ from authentication.models import User
 class Currency(models.Model):
     name = models.CharField(max_length=25)
     course= models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
-
     class Meta:
         verbose_name = "Валюта"
         verbose_name_plural = "Валюта"
@@ -81,7 +80,6 @@ class Trade(models.Model):
     quantity = models.IntegerField()
     unit_price = models.DecimalField(max_digits=7, decimal_places=2)
     currenc = models.CharField(max_length=20, blank=True, null=True)
-    # currenc = models.ForeignKey(Currency, blank=True, null=True, on_delete=models.SET_NULL)
     buyer_offer = models.ForeignKey(Offer, blank=True, null=True, on_delete=models.SET_NULL, related_name='buyer_trade',
                                     related_query_name='buyer_trade')
     seller_offer = models.ForeignKey(Offer, blank=True, null=True, on_delete=models.SET_NULL, related_name='seller_trade',

@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from offer.models import Offer, Trade, Inventory, Money, WatchList, Currency
+from offer.models import Offer, Trade, Inventory, Money, WatchList, Currency, Price, Item
 
 
 class OfferSerializer(serializers.ModelSerializer):
@@ -22,8 +22,12 @@ class OfferSerializer(serializers.ModelSerializer):
 class TradeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Trade
-        fields = ['item', 'unit_price', 'quantity', 'buyer', 'buyer_offer', 'seller', 'seller_offer']
+        fields = ['item', 'unit_price', 'quantity', 'buyer', 'buyer_offer', 'seller', 'seller_offer', 'date']
 
+class ItemSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Item
+        fields = ['name', 'price', 'currenc']
 
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,3 +50,8 @@ class CurrencySerializer(serializers.ModelSerializer):
     class Meta:
         model = Currency
         fields = ['name', 'course']
+
+class PriceSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Price
+        fields = ['item', 'currenc', "price"]
