@@ -1,17 +1,20 @@
-from offer.models import Inventory, Item, Price,  Money
+from offer.models import Inventory, Item, Price, Money
 
 
 def change_quantity(trades):
-    stocks = Inventory.objects.select_related('item', 'user').filter(user__in=[i.buyer for i in trades]+[i.seller for i in trades])
+    stocks = Inventory.objects.select_related('item', 'user').filter(
+        user__in=[i.buyer for i in trades] + [i.seller for i in trades])
 
     for stock in stocks:
         for trade in trades:
-            if trade.item == stock.item :
+            if trade.item == stock.item:
                 stock.quantity += trade.quantity if stock.user == trade.buyer else -trade.quantity
     Inventory.objects.bulk_update(stocks, ['quantity'])
 
+
 def change_sum(trades):
-    wallets = Money.objects.select_related('user').filter(user__in=[i.buyer for i in trades]+[i.seller for i in trades])
+    wallets = Money.objects.select_related('user').filter(
+        user__in=[i.buyer for i in trades] + [i.seller for i in trades])
     for trade in trades:
         for wallet in wallets:
             wallet.sum += trade.unit_price * trade.quantity if wallet.user == trade.seller else -trade.unit_price * trade.quantity

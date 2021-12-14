@@ -2,7 +2,10 @@ from rest_framework import serializers
 from django.contrib.auth import authenticate
 
 from authentication.models import User
+
 """data structure in the body of the POST request :"""
+
+
 # {
 #     "user": {
 #         "username": "user1",

@@ -3,7 +3,6 @@ from django.urls import path
 from authentication.views import LoginAPIView, RegistrationAPIView, UserRetrieveUpdateAPIView
 from rest_framework_simplejwt.views import (TokenObtainPairView, TokenRefreshView, TokenVerifyView)
 
-
 app_name = 'authentication'
 
 urlpatterns = [

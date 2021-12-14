@@ -16,7 +16,7 @@ services:
       - redis
   db:
     image: postgres:12.0-alpine
-#    command: ["postgres", "-c", "log_statement=all"]
+    #    command: ["postgres", "-c", "log_statement=all"]
     restart: always
     volumes:
       - postgres_data:/var/lib/postgresql/data/
@@ -43,7 +43,7 @@ services:
 
   dashboard:
     build: ../trading
-    command:  flower -A trading --port=5555 --broker=redis://redis:6379/0
+    command: flower -A trading --port=5555 --broker=redis://redis:6379/0
     ports:
       - 5555:5555
     env_file:

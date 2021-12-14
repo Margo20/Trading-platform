@@ -16,14 +16,16 @@ def req():
             if buyer.item == seller.item and buyer.price >= seller.price:
                 sel.append(seller)
                 if buyer.quantity <= seller.quantity:
-                    trades.append(Trade(item=buyer.item, quantity=buyer.quantity, unit_price=seller.price, currenc=buyer.item.currenc, buyer_offer=buyer,
+                    trades.append(Trade(item=buyer.item, quantity=buyer.quantity, unit_price=seller.price,
+                                        currenc=buyer.item.currenc, buyer_offer=buyer,
                                         seller_offer=seller, seller=seller.user, buyer=buyer.user))
                     seller.quantity = seller.quantity - buyer.quantity
                     # seller.user.money_set.sum
                     buyer.quantity = 0
                     break
                 else:
-                    trades.append(Trade(item=buyer.item, quantity=seller.quantity, unit_price=seller.price, currenc=buyer.item.currenc, buyer_offer=buyer,
+                    trades.append(Trade(item=buyer.item, quantity=seller.quantity, unit_price=seller.price,
+                                        currenc=buyer.item.currenc, buyer_offer=buyer,
                                         seller_offer=seller, seller=seller.user, buyer=buyer.user))
                     buyer.quantity -= seller.quantity
                     seller.quantity = 0

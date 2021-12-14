@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 from authentication.serializers import (LoginSerializer, RegistrationSerializer, UserSerializer)
 
+
 class RegistrationAPIView(APIView):
     permission_classes = (AllowAny,)
     serializer_class = RegistrationSerializer

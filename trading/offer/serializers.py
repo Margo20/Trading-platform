@@ -24,10 +24,12 @@ class TradeSerializer(serializers.ModelSerializer):
         model = Trade
         fields = ['item', 'unit_price', 'quantity', 'buyer', 'buyer_offer', 'seller', 'seller_offer', 'date']
 
+
 class ItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = Item
         fields = ['name', 'price', 'currenc']
+
 
 class InventorySerializer(serializers.ModelSerializer):
     class Meta:
@@ -46,10 +48,12 @@ class WatchListSerializer(serializers.ModelSerializer):
         model = WatchList
         fields = ['user', 'item']
 
+
 class CurrencySerializer(serializers.ModelSerializer):
     class Meta:
         model = Currency
         fields = ['name', 'course']
+
 
 class PriceSerializer(serializers.ModelSerializer):
     class Meta:

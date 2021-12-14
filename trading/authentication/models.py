@@ -11,6 +11,7 @@ from django.db import models
 
 class UserManager(BaseUserManager):
     """ Creates and returns an user with an email, password and name """
+
     def create_user(self, username, email, password=None):
         if username is None:
             raise TypeError('Users must have a username.')
@@ -35,6 +36,7 @@ class UserManager(BaseUserManager):
 
         return user
 
+
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(db_index=True, max_length=255, unique=True)
     email = models.EmailField(db_index=True, unique=True)
@@ -48,7 +50,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     def __str__(self):
-        return self.email
+        return self.username
 
     @property
     def token(self):

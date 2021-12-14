@@ -1,61 +1,60 @@
 from model_bakery import baker
 import json
 import pytest
-from offer.models import Currency, Trade, Offer, Inventory, Item, StockBase
+from offer.models import Currency, Trade, Offer, Inventory, Item, StockBase, WatchList, Money, Price
 from authentication.models import User
 from django.urls import reverse
 
-
 pytestmark = [pytest.mark.urls('config.urls'), pytest.mark.django_db, pytest.mark.unit]
 
+
 def test_detail_show_currenc(client):
-    currenc = Currency.objects.create(name = 'USD', course=15)
+    currenc = Currency.objects.create(name='USD', course=15)
     client.login(username='admin', password='admin')
 
-    myRequest = reverse('offer:currency-detail', args=[currenc.id])
-    response = client.get(myRequest)
+    my_request = reverse('offer:currency-detail', args=[currenc.id])
+    response = client.get(my_request)
 
-    assert  response.status_code==200
+    assert response.status_code == 200
     assert 'USD' in response.content.decode()
     assert '15' in response.content.decode()
 
-def test_detail_show_invenory(client):
+
+def test_detail_show_inventory(client):
     currenc = Currency.objects.create(name='USD', course=11)
     stockbase = StockBase.objects.create(name='Apple')
-    item = Item.objects.create(name = stockbase, price=15, currenc=currenc)
+    item = Item.objects.create(name=stockbase, price=15, currenc=currenc)
 
     client.login(username='admin', password='admin')
     user = User.objects.get(username='admin')
 
-    inventory = Inventory.objects.create(user=user, item = item, quantity=5)
-    myRequest = reverse('offer:inventory-detail', args=[inventory.id])
-    response = client.get(myRequest)
+    inventory = Inventory.objects.create(user=user, item=item, quantity=5)
+    my_request = reverse('offer:inventory-detail', args=[inventory.id])
+    response = client.get(my_request)
 
-    assert  response.status_code==200
+    assert response.status_code == 200
     assert '5' in response.content.decode()
     assert '1' in response.content.decode()
 
 
 def test_detail_show_trade(client):
-    currenc = Currency.objects.create(name = 'USD', course=1)
+    currenc = Currency.objects.create(name='USD', course=1)
     user = User.objects.create()
     seller = User.objects.get(username='admin')
     stockbase = StockBase.objects.create(name='Apple')
     item = Item.objects.create(name=stockbase)
     client.login(username='admin', password='admin')
 
-    trade = Trade.objects.create(item = item, quantity = 3, unit_price=17.00,
-                                  currenc=currenc, seller=seller, buyer=user)
+    trade = Trade.objects.create(item=item, quantity=3, unit_price=17.00,
+                                 currenc=currenc, seller=seller, buyer=user)
     response = client.get(reverse('offer:trade-detail', args=[trade.id]))
 
-    assert  response.status_code==200
+    assert response.status_code == 200
     assert '17' in response.content.decode()
-
 
 
 class TestCurrencyEndpoints:
     endpoint = '/currency/'
-
 
     def test_list(self, api_client):
         client = api_client()
@@ -125,11 +124,11 @@ class TestCurrencyEndpoints:
         assert response.status_code == 200
         assert json.loads(response.content) == currency_dict
 
-    @pytest.mark.parametrize('field',[
-        ('name'),
-        ('course'),
+    @pytest.mark.parametrize('field', [
+        'name',
+        'course',
     ])
-    def test_partial_update(self, mocker, rf, field, api_client):
+    def test_partial_update(self, rf, field, api_client):
         client = api_client()
         client.login(username='admin', password='admin')
 
@@ -150,7 +149,7 @@ class TestCurrencyEndpoints:
         assert response.status_code == 200
         assert json.loads(response.content)[field] == valid_field
 
-    def test_delete(self, mocker, api_client):
+    def test_delete(self, api_client):
         client = api_client()
         client.login(username='admin', password='admin')
 
@@ -163,30 +162,27 @@ class TestCurrencyEndpoints:
         assert Currency.objects.all().count() == 0
 
 
-
 class TestTradeEndpoints:
-
     endpoint = '/trade/'
 
-    def test_list(self, api_client, utbb):
+    def test_list(self, api_client):
         client = api_client()
         client.login(username='admin', password='admin')
-        # utbb(3)
         url = self.endpoint
         response = client.get(url)
 
         assert response.status_code == 200
         assert len(json.loads(response.content)) == 4
 
-    def test_create(self, api_client, utbb2):
+    def test_create(self, api_client, filled_trade_bakery):
         client = api_client()
         client.login(username='admin', password='admin')
 
-        t = utbb2(1)[0]
+        t = filled_trade_bakery()
         valid_data_dict = {
             'currenc': str(t.currenc),
             'item': t.item.pk,
-            'quantity':3,
+            'quantity': 3,
             'unit_price': 15,
             'seller': t.seller.pk,
             'buyer': t.buyer.pk
@@ -199,30 +195,29 @@ class TestTradeEndpoints:
             data=valid_data_dict,
             format='json'
         )
-
         assert response.status_code == 201
-        responseJson = json.loads(response.content)
-        assert responseJson['date'] is not None
-        del responseJson['date']
-        expectedJson = json.loads(
-            '{"item": 1, "unit_price": "15.00", "quantity": 3, "buyer": 3, "buyer_offer": null, "seller": 2, "seller_offer": null}')
-        assert responseJson == expectedJson
+        response_json = json.loads(response.content)
+        assert response_json['date'] is not None
+        del response_json['date']
+        expected_json = json.loads(
+            '{"item": 1, "unit_price": "15.00", "quantity": 3, "buyer": 3, '
+            '"buyer_offer": null, "seller": 2, "seller_offer": null}')
+        assert response_json == expected_json
 
-
-    def test_retrieve(self, api_client, ftb):
+    def test_retrieve(self, api_client, filled_trade_bakery):
         client = api_client()
         client.login(username='admin', password='admin')
 
-        t = ftb()
-        expected_json = {} # t.__dict__
-        expected_json['item'] = t.item.pk
-        expected_json['quantity'] = t.quantity
-        expected_json['unit_price'] = str(t.unit_price)
-        expected_json['seller'] = t.seller.pk
-        expected_json['buyer'] = t.buyer.pk
-        expected_json['buyer_offer'] = None
-        expected_json['seller_offer'] = None
-
+        t = filled_trade_bakery()
+        expected_json = {
+            'item': t.item.pk,
+            'quantity': t.quantity,
+            'unit_price': str(t.unit_price),
+            'seller': t.seller.pk,
+            'buyer': t.buyer.pk,
+            'buyer_offer': None,
+            'seller_offer': None,
+        }
 
         url = f'{self.endpoint}{t.id}/'
 
@@ -230,28 +225,28 @@ class TestTradeEndpoints:
 
         assert response.status_code == 200 or response.status_code == 301
 
-        responseJson = json.loads(response.content)
-        assert responseJson['date'] is not None
-        del responseJson['date']
-        assert responseJson == expected_json
+        response_json = json.loads(response.content)
+        assert response_json['date'] is not None
+        del response_json['date']
+        assert response_json == expected_json
 
-
-    def test_update(self, api_client, utbb):
+    def test_update(self, api_client, filled_trade_bakery):
         client = api_client()
         client.login(username='admin', password='admin')
 
-        old_transaction = utbb(1)[0]
-        t = utbb(1)[0]
-        expected_json = {}
-        expected_json['id'] = old_transaction.id
-        expected_json['item'] = old_transaction.item.pk
-        # expected_json['currenc'] = 11
-        expected_json['quantity'] = 5
-        expected_json['unit_price'] = '15.00'
-        expected_json['seller'] = old_transaction.seller.pk
-        expected_json['buyer'] = old_transaction.buyer.pk
-        expected_json['buyer_offer'] = None
-        expected_json['seller_offer'] = None
+        old_transaction = filled_trade_bakery()
+        # noinspection PyUnusedLocal
+        to_be_updated = filled_trade_bakery()
+        expected_json = {
+            'id': old_transaction.id,
+            'item': old_transaction.item.pk,
+            'quantity': 5,
+            'unit_price': '15.00',
+            'seller': old_transaction.seller.pk,
+            'buyer': old_transaction.buyer.pk,
+            'buyer_offer': None,
+            'seller_offer': None
+        }
 
         url = f'{self.endpoint}{old_transaction.id}/'
 
@@ -262,16 +257,16 @@ class TestTradeEndpoints:
         )
 
         assert response.status_code == 200 or response.status_code == 301
-        responseJson = json.loads(response.content)
-        assert responseJson['date'] is not None
-        del responseJson['date']
+        response_json = json.loads(response.content)
+        assert response_json['date'] is not None
+        del response_json['date']
         del expected_json['id']
-        assert responseJson == expected_json
+        assert response_json == expected_json
 
-    def test_delete(self, api_client, utbb):
+    def test_delete(self, api_client, filled_trade_bakery):
         client = api_client()
         client.login(username='admin', password='admin')
-        transaction = utbb(1)[0]
+        transaction = filled_trade_bakery()
         url = f'{self.endpoint}{transaction.id}/'
 
         response = client.delete(
@@ -279,3 +274,68 @@ class TestTradeEndpoints:
         )
 
         assert response.status_code == 204 or response.status_code == 301
+
+
+class TestModels:
+    def test_trade_str(self):
+        currenc = Currency.objects.create(name='USD', course=1)
+        buyer = User.objects.create(username='myBuyer')
+        seller = User.objects.get(username='admin')
+        stockbase = StockBase.objects.create(name='Apple')
+        item = Item.objects.create(name=stockbase, price=12.0)
+        trade = Trade.objects.create(item=item, quantity=3, unit_price=17.00,
+                                     currenc=currenc, seller=seller, buyer=buyer)
+        as_str = str(trade)
+        assert as_str == 'Apple-12.0-17.0-myBuyer'
+
+    def test_currency_str(self):
+        currenc = Currency.objects.create(name='USD', course=15)
+
+        as_str = str(currenc)
+        assert as_str == 'USD'
+
+    def test_inventory_str(self):
+        currenc = Currency.objects.create(name='USD', course=11)
+        stockbase = StockBase.objects.create(name='Apple')
+        item = Item.objects.create(name=stockbase, price=15, currenc=currenc)
+        user = User.objects.create(username='vasia')
+
+        inventory = Inventory.objects.create(user=user, item=item, quantity=5)
+
+        as_str = str(inventory)
+        assert as_str == 'vasia-Apple-15-5'
+
+    def test_watchlist_str(self):
+        stockbase = StockBase.objects.create(name='Apple')
+        user = User.objects.create(username='vasia')
+
+        watchlist = WatchList.objects.create(user=user, item=stockbase)
+
+        as_str = str(watchlist)
+        assert as_str == 'vasia:Apple'
+
+    def test_offer_str(self):
+        user = User.objects.create(username='vasia')
+        stockbase = StockBase.objects.create(name='Apple')
+        item = Item.objects.create(name=stockbase, price=15)
+        offer = Offer.objects.create(item=item, order_type='sale', price=10,
+                                     user=user, quantity=3, entry_quantity=3)
+        as_str = str(offer)
+        assert as_str == 'Apple-15-sale-10-vasia-3'
+
+    def test_money_str(self):
+        currenc = Currency.objects.create(name='USD', course=11)
+        user = User.objects.create(username='myBuyer')
+        money = Money.objects.create(user=user, sum=3, currenc=currenc)
+
+        as_str = str(money)
+        assert as_str == 'myBuyer-3-USD'
+
+    def test_price_str(self):
+        currenc = Currency.objects.create(name='USD', course=11)
+        stockbase = StockBase.objects.create(name='Apple')
+        item = Item.objects.create(name=stockbase, price=15)
+        price = Price.objects.create(item=item, price=10.0, currenc=currenc)
+
+        as_str = str(price)
+        assert as_str == 'Apple-15-10.0'

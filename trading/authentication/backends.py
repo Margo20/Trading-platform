@@ -9,8 +9,8 @@ class JWTAuthentication(authentication.BaseAuthentication):
 
     def authenticate(self, request):
         request.user = None
-#'auth_header' must be an array with two elements:
-# 1)the name of the authentication header (Token) 2) JWT
+        # 'auth_header' must be an array with two elements:
+        # 1)the name of the authentication header (Token) 2) JWT
         auth_header = authentication.get_authorization_header(request).split()
         auth_header_prefix = self.authentication_header_prefix.lower()
 

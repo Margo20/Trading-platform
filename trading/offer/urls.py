@@ -1,9 +1,9 @@
 from rest_framework.routers import DefaultRouter
 
-from offer.views import CurrencyViewSet, OfferViewSet, ItemViewSet, TradeViewSet, MoneyViewSet, PriceViewSet, WatchListViewSet, InventoryViewSet
+from offer.views import CurrencyViewSet, OfferViewSet, ItemViewSet, TradeViewSet, MoneyViewSet, PriceViewSet, \
+    WatchListViewSet, InventoryViewSet
 
 app_name = "offer"
-
 
 router = DefaultRouter()
 router.register("offer", OfferViewSet, basename="offer")
