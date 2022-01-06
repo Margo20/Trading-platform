@@ -14,5 +14,7 @@
 # python manage.py flush --no-input
 python manage.py migrate
 python manage.py collectstatic --no-input --clear
+#export DOCKER_KAFKA_HOST=$(ipconfig getifaddr en0)
+export DOCKER_KAFKA_HOST=10.1.0.111
 
 exec "$@"

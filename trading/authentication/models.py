@@ -10,8 +10,7 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
-    """ Creates and returns an user with an email, password and name """
-
+    """ Создает и возвращает пользователя с имэйлом, паролем и именем. """
     def create_user(self, username, email, password=None):
         if username is None:
             raise TypeError('Users must have a username.')
@@ -36,21 +35,21 @@ class UserManager(BaseUserManager):
 
         return user
 
-
 class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(db_index=True, max_length=255, unique=True)
     email = models.EmailField(db_index=True, unique=True)
     is_active = models.BooleanField(default=True)
+    # Этот флаг определяет, кто может войти в административную часть сайта
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-    USERNAME_FIELD = 'username'
-    REQUIRED_FIELDS = ['email']
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     objects = UserManager()
 
     def __str__(self):
-        return self.username
+        return self.email
 
     @property
     def token(self):
@@ -64,8 +63,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     def _generate_jwt_token(self):
         """
-        Generates a JSON web token that stores the ID of this user,
-        token validity period is 1 day from creation
+        Генерирует веб-токен JSON, в котором хранится идентификатор этого
+        пользователя, срок действия токена составляет 1 день от создания
         """
         dt = datetime.now() + timedelta(days=1)
 

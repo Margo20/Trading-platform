@@ -90,11 +90,9 @@ class Trade(models.Model):
                                      related_query_name='seller_trade')
 
     seller = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL,
-                               related_name='seller_trade',
-                               related_query_name='seller_trade')
+                               related_name='seller_trade')
     buyer = models.ForeignKey(User, blank=True, null=True, on_delete=models.SET_NULL,
-                              related_name='buyer_trade',
-                              related_query_name='buyer_trade')
+                              related_name='buyer_trade')
     date = models.DateTimeField(blank=True, null=True, auto_now_add=True)
 
     class Meta:
