@@ -1,5 +1,4 @@
-version: '2.4'
-#version: '3.5'
+version: '3.5'
 volumes:
   postgres_data:
 
@@ -15,6 +14,7 @@ services:
       - ./.env.dev
     depends_on:
       - redis
+      - db
     networks:
       - mynetwork
   db:
@@ -24,7 +24,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
-      - 5432:5432
+      - 5435:5432
     environment:
       - POSTGRES_USER=postgres_docker
       - POSTGRES_PASSWORD=postgres_docker
@@ -59,15 +59,12 @@ services:
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9093,OUTSIDE://0.0.0.0:9092
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-
-##      KAFKA_ADVERTISED_HOST_NAME: 10.202.20.69 #hostname
-
       KAFKA_ADVERTISED_HOST_NAME: ${DOCKER_KAFKA_HOST}
       KAFKA_CREATE_TOPICS: "topic-email:1:1"
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_LOG4J_LOGGERS: "kafka.controller=TRACE,kafka.request.logger=TRACE"
-#    volumes:
-#      - ./data/kafka1/data:/var/lib/kafka/data
+  #    volumes:
+  #      - ./data/kafka1/data:/var/lib/kafka/data
 
 
   celery:
@@ -83,8 +80,6 @@ services:
     networks:
       - mynetwork
     environment:
-#      DOCKER_KAFKA_HOST: kafka
-#      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9093,OUTSIDE://localhost:9092
       KAFKA_EXTERNAL_HOSTNAME: kafka
 
   redis:

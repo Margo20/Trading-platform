@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 from datetime import timedelta
 from pathlib import Path
+from decouple import config
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -29,9 +30,9 @@ ALLOWED_HOSTS = os.environ.get("DJANGO_ALLOWED_HOSTS").split(" ")
 
 if DEBUG:
     import socket
+
     hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
     INTERNAL_IPS = [ip[:-1] + '1' for ip in ips] + ['127.0.0.1', '10.0.2.2']
-
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -49,7 +50,6 @@ INSTALLED_APPS = [
     'offer',
 
 ]
-
 
 MIDDLEWARE = [
     'django.middleware.http.ConditionalGetMiddleware',
@@ -83,9 +83,7 @@ TEMPLATES = [
     },
 ]
 
-
 WSGI_APPLICATION = 'trading.wsgi.application'
-
 
 # DATABASES = {
 #     'default': {
@@ -121,7 +119,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 LANGUAGE_CODE = 'en-us'
 
 TIME_ZONE = 'UTC'
@@ -132,10 +129,8 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 STATIC_URL = '/static/'
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
-
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
@@ -187,20 +182,19 @@ SIMPLE_JWT = {
     'SLIDING_TOKEN_REFRESH_LIFETIME': timedelta(days=1),
 }
 
-
 CELERY_BROKER_URL = os.environ.get("CELERY_BROKER", "redis://localhost:6379/0")
 CELERY_RESULT_BACKEND = os.environ.get("CELERY_BROKER", "redis://localhost:6379/0")
 CELERY_ACCEPT_CONTENT = {'application/json'}
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-
+# SCHEMA_REGISTRY_URL = config('SCHEMA_REGISTRY_URL')
+SCHEMA_REGISTRY_URL = "http://localhost:8081"
 
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
         'LOCATION': 'rediss://localhost:6379/0',
-        'OPTIONS':{
-            # 'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        'OPTIONS': {
             'PASSWORD': 'mysecret',
         }
     }
@@ -208,6 +202,3 @@ CACHES = {
 #
 # SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 # SESSION_CACHE_ALIAS = "default"
-
-
-

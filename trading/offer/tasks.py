@@ -5,25 +5,12 @@ from django.db import transaction
 from offer.services import change_quantity, change_sum, change_price
 
 from kafka import KafkaProducer
-print("start tasks.py")
 
-# if settings.DEBUG:
-# import pydevd
-# pydevd.settrace('172.17.0.1', port=52617, suspend=False, stderrToServer=True, stdoutToServer=True)
-# import pydevd_pycharm
-# pydevd_pycharm.settrace('172.17.0.1', port=52617, stdoutToServer=True, stderrToServer=True)
-
-# producer = KafkaProducer(bootstrap_servers=['kafka:9092'], api_version=(0,11,5))
-# producer.send('topic-email', b'from tasks.py')
-# producer.flush()
-# producer.close()
 
 @app.task
 def req():
     # import pydevd_pycharm
     # pydevd_pycharm.settrace('172.17.0.1', port=52617, stdoutToServer=True, stderrToServer=True)
-
-    print("start req")
     buyers = Offer.objects.filter(order_type="buying", quantity__gt=0).select_related('item', 'item__currenc')
     sellers = Offer.objects.filter(order_type="sale", quantity__gt=0).order_by("price").select_related('item')
 
@@ -48,18 +35,6 @@ def req():
                     buyer.quantity -= seller.quantity
                     seller.quantity = 0
 
-    # producer = KafkaProducer(bootstrap_servers='10.1.0.111:9092')
-    # print("msg from tasks.py sent 1")
-    # producer = KafkaProducer(bootstrap_servers=['kafka:9092'], api_version=(0, 11, 5))
-    # print("msg from tasks.py sent 2")
-    # producer.send('topic-email', b'from tasks.py')
-    # print("msg from tasks.py sent 3")
-    # producer.flush()
-    # print("msg from tasks.py sent 4")
-    # producer.close()
-    # # del producerk
-    # print("msg from tasks.py sent 5")
-
     with transaction.atomic():
         Trade.objects.bulk_create(trades)
         Offer.objects.bulk_update(buyers, ['quantity'])
@@ -68,5 +43,9 @@ def req():
         change_sum(trades)
         change_price(trades)
 
-        # producer.send('topic-email', b'Good morning!!!')
-        # print('i send a message')
+    producer = KafkaProducer(bootstrap_servers='10.1.0.111:9092')
+    for trade in trades:
+        producer.send('topic-email', trade.seller.email.encode(encoding='utf-8'))
+        producer.send('topic-email', trade.buyer.email.encode(encoding='utf-8'))
+    producer.flush()
+    producer.close()
