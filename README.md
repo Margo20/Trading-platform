@@ -1,6 +1,6 @@
 # 'Trading platform' task implementation.
 ### Content/Instruments:
-Authorization (jwt token), celery, redis, docker, docker-compose
+Authorization (jwt token), celery, redis, kafka, docker, docker-compose
 ### Usage:
 For authorization use JSON like this:
 ```

@@ -47,5 +47,9 @@ def req():
     for trade in trades:
         producer.send('topic-email', trade.seller.email.encode(encoding='utf-8'))
         producer.send('topic-email', trade.buyer.email.encode(encoding='utf-8'))
+        producer.send('topic-notice', trade.buyer.id.to_bytes(2, byteorder='big'))
+        producer.send('topic-notice', trade.seller.id.to_bytes(2, byteorder='big'))
+
     producer.flush()
     producer.close()
+

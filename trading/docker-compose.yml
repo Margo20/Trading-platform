@@ -24,7 +24,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data/
     ports:
-      - 5435:5432
+      - 5436:5432
     environment:
       - POSTGRES_USER=postgres_docker
       - POSTGRES_PASSWORD=postgres_docker

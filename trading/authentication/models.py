@@ -10,7 +10,6 @@ from django.db import models
 
 
 class UserManager(BaseUserManager):
-    """ Создает и возвращает пользователя с имэйлом, паролем и именем. """
     def create_user(self, username, email, password=None):
         if username is None:
             raise TypeError('Users must have a username.')
@@ -39,7 +38,6 @@ class User(AbstractBaseUser, PermissionsMixin):
     username = models.CharField(db_index=True, max_length=255, unique=True)
     email = models.EmailField(db_index=True, unique=True)
     is_active = models.BooleanField(default=True)
-    # Этот флаг определяет, кто может войти в административную часть сайта
     is_staff = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -62,10 +60,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         return self.username
 
     def _generate_jwt_token(self):
-        """
-        Генерирует веб-токен JSON, в котором хранится идентификатор этого
-        пользователя, срок действия токена составляет 1 день от создания
-        """
         dt = datetime.now() + timedelta(days=1)
 
         token = jwt.encode({
