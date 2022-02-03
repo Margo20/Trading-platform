@@ -1,3 +1,5 @@
+import json
+
 from offer.models import Offer, Trade
 from trading.celery import app
 from django.db import transaction
@@ -25,7 +27,6 @@ def req():
                                         currenc=buyer.item.currenc, buyer_offer=buyer,
                                         seller_offer=seller, seller=seller.user, buyer=buyer.user))
                     seller.quantity = seller.quantity - buyer.quantity
-                    # seller.user.money_set.sum
                     buyer.quantity = 0
                     break
                 else:
@@ -49,6 +50,10 @@ def req():
         producer.send('topic-email', trade.buyer.email.encode(encoding='utf-8'))
         producer.send('topic-notice', trade.buyer.id.to_bytes(2, byteorder='big'))
         producer.send('topic-notice', trade.seller.id.to_bytes(2, byteorder='big'))
+        producer.send('topic-trade', trade.seller.username.encode(encoding='utf-8'))
+        producer.send('topic-trade', trade.buyer.username.encode(encoding='utf-8'))
+        producer.send('topic-trade', json.dumps(trade.__dict__).encode(encoding='utf-8'))
+
 
     producer.flush()
     producer.close()
