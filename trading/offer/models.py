@@ -16,8 +16,7 @@ class Currency(models.Model):
 
 class Item(models.Model):
     """Particular stock"""
-    name = models.OneToOneField('StockBase', related_name='item_name', max_length=30, blank=True, null=True,
-                                on_delete=models.SET_NULL)
+    name = models.CharField(max_length=25, blank=True, null=True)
     price = models.DecimalField(max_digits=7, decimal_places=2, blank=True, null=True)
     currenc = models.ForeignKey(Currency, null=True, blank=True, on_delete=models.SET_NULL)
     code = models.CharField(max_length=25, blank=True, null=True)

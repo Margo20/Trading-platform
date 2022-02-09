@@ -69,7 +69,7 @@ services:
 
   celery:
     build: ../trading
-    command: celery -A trading worker -B --loglevel=info
+    command: celery --app=trading.celery_service worker -B --loglevel=info
     volumes:
       - ../trading:/usr/src/app
     env_file:
@@ -108,7 +108,7 @@ networks:
   mynetwork:
     name: bridge_network_inno_automate
     driver: bridge
-    enable_ipv6: false
+#    enable_ipv6: false
     ipam:
       config:
         - subnet: 10.1.0.0/16
