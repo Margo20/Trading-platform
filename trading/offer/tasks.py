@@ -53,8 +53,9 @@ def req():
         print("trade:", trade)
         # convert decimal to int, convert dollars into cents, round, convert into int
         trade_unit_price = int((decimal.Decimal(trade.unit_price) * 100).to_integral_value())
-
+        id_trade = str(trade.id)
         x = {
+            "id_trade":id_trade,
             "id_buyer": trade.buyer.id,
             "id_seller": trade.seller.id,
             "buyer_name": trade.buyer.username,
